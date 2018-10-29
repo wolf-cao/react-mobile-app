@@ -1,0 +1,6 @@
+node_modules/
+dist/
+ReactMobileH5/
+ReactMobileH5.zip
+.vscode
+.DS_Store
