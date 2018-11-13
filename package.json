@@ -5,8 +5,6 @@
   "main": "index.js",
   "author": "",
   "scripts": {
-    "precommit": "npm run lint",
-    "prepush": "npm run lint",
     "lint": "./node_modules/.bin/eslint ./src",
     "start": "NODE_ENV=development webpack-dev-server --hot --open --history-api-fallback",
     "build": "NODE_ENV=production webpack",
@@ -41,7 +39,7 @@
     "history": "^4.7.2",
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
-    "husky": "^0.14.3",
+    "husky": "^1.1.3",
     "json-server": "^0.14.0",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
@@ -77,5 +75,11 @@
     ">1%",
     "Firefox ESR",
     "not ie < 9"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run lint"
+    }
+  }
 }
