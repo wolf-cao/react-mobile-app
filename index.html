@@ -1,19 +1,15 @@
-<!DOCTYPE>
 <html>
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1" />
   <meta name="format-detection" content="telephone=no">
-  <link href="<%= htmlWebpackPlugin.options.assetsPath %>vendor.css" rel="stylesheet" />
-  <link href="<%= htmlWebpackPlugin.options.assetsPath %>app.css" rel="stylesheet" />
   <script>
     !function (e) { function t(a) { if (i[a]) return i[a].exports; var n = i[a] = { exports: {}, id: a, loaded: !1 }; return e[a].call(n.exports, n, n.exports, t), n.loaded = !0, n.exports } var i = {}; return t.m = e, t.c = i, t.p = "", t(0) }([function (e, t) { "use strict"; Object.defineProperty(t, "__esModule", { value: !0 }); var i = window; t["default"] = i.flex = function (e, t) { var a = e || 100, n = t || 1, r = i.document, o = navigator.userAgent, d = o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i), l = o.match(/U3\/((\d+|\.){5,})/i), c = l && parseInt(l[1].split(".").join(""), 10) >= 80, p = navigator.appVersion.match(/(iphone|ipad|ipod)/gi), s = i.devicePixelRatio || 1; p || d && d[1] > 534 || c || (s = 1); var u = 1 / s, m = r.querySelector('meta[name="viewport"]'); m || (m = r.createElement("meta"), m.setAttribute("name", "viewport"), r.head.appendChild(m)), m.setAttribute("content", "width=device-width,user-scalable=no,initial-scale=" + u + ",maximum-scale=" + u + ",minimum-scale=" + u), r.documentElement.style.fontSize = a / 2 * s * n + "px" }, e.exports = t["default"] }]);
     flex(100, 1);
     document.documentElement.setAttribute('data-scale', true);
   </script>
-  <!-- 自己配置fastlick地址 -->
-  <script src="https://www.yourcdn.com/fastclick.js"></script>
+  <script src="https://mobappconfig.securities.eastmoney.com/fastclick.js"></script>
   <script>
     if ('addEventListener' in document) {
       document.addEventListener('DOMContentLoaded', function () {
@@ -21,120 +17,21 @@
       }, false);
     }
   </script>
-
-  <!-- app config -->
   <script>
     window.PEAPP = {
-      env: "<%= htmlWebpackPlugin.options.env %>",
-      server: "<%= htmlWebpackPlugin.options.server %>",
-      assetsVersion: "<%= htmlWebpackPlugin.options.assetsVersion %>",
-      assetsPath: "<%= htmlWebpackPlugin.options.assetsPath %>",
-      appName: "<%= htmlWebpackPlugin.options.appName %>"
+      server: "<%= htmlWebpackPlugin.options.server %>"
     }  
   </script>
-  <!-- app config -->
-
-  <!-- app assets script -->
-  <noscript>
-    <script src="manifest.bundle.js"></script>
-    <script src="vendor.bundle.js"></script>
-    <script src="app.bundle.js"></script>
-  </noscript>
-  <!-- app assets script -->
-
-  <script>
-    (function () {
-      const assetsVersion = window.PEAPP.assetsVersion
-      const assetsPath = window.PEAPP.assetsPath
-      const appName = window.PEAPP.appName
-      const env = window.PEAPP.env
-
-      // 获取js文件名
-      const getScriptsUrl = function () {
-        let scriptHtml = document.head.querySelector('noscript').innerHTML.replace(/&lt;/, '<').replace(/&gt;/g, '>').match(/"([^>]*)"/g)
-        scriptHtml = scriptHtml.map(function (js) {
-          return js.replace(/\"/g, "")
-        })
-        return scriptHtml
-      }
-
-      // 删除老版本的js本地缓存
-      const deleteOldCacheScripts = function (loadScripts) {
-        const oldVersion = window.localStorage.getItem(appName + '_version')
-        if (oldVersion !== assetsVersion) {
-          for (let i = 0; i < loadScripts.length; i++) {
-            window.localStorage.removeItem(loadScripts[i] + '_' + oldVersion)
-          }
-        }
-      }
-
-      // 异步获取js代码，并放在head中
-      const requestScript = function (scriptUrl) {
-        const httpRequest = new XMLHttpRequest()
-        httpRequest.onreadystatechange = () => {
-          if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200 || httpRequest.status === 304) {
-            const assetsScript = document.createElement('script')
-            assetsScript.defer = true
-            assetsScript.innerHTML = httpRequest.responseText
-            document.head.appendChild(assetsScript)
-
-            // 保存APP的js文件
-            window.localStorage.setItem(scriptUrl + '_' + assetsVersion, encodeURIComponent(httpRequest.responseText))
-          }
-        }
-        httpRequest.open('GET', assetsPath + scriptUrl + '?_v=' + assetsVersion, true)
-        httpRequest.send(null)
-      }
-
-      // 判断本地是否存在js文件，并从本地获取
-      const renderScript = function () {
-        const loadScripts = getScriptsUrl()
-
-        // 判断是否存在localStorage方法
-        if (window.localStorage && env === 'production') {
-          // 删除老版本的js本地缓存
-          deleteOldCacheScripts(loadScripts)
-
-          // 加载js文件
-          for (let i = 0; i < loadScripts.length; i++) {
-            if (!window.localStorage.getItem(loadScripts[i] + '_' + assetsVersion)) {
-              requestScript(loadScripts[i])
-            } else {
-              const assetsScript = document.createElement('script')
-              assetsScript.defer = true
-              assetsScript.innerHTML = decodeURIComponent(window.localStorage.getItem(loadScripts[i] + '_' + assetsVersion))
-              setTimeout(function () {
-                document.head.appendChild(assetsScript)
-              }, 0)
-            }
-          }
-          // 保存APP的版本号
-          window.localStorage.setItem(appName + '_version', assetsVersion)
-          return
-        }
-
-        // 不存在localStorage方式
-        for (let i = 0; i < loadScripts.length; i++) {
-          const assetsScript = document.createElement('script')
-          assetsScript.defer = true
-          assetsScript.src = assetsPath + loadScripts[i] + '?_v=' + assetsVersion
-          setTimeout(function () {
-            document.head.appendChild(assetsScript)
-          })
-        }
-      }
-
-      return {
-        init() {
-          renderScript()
-        }
-      }
-    })().init()
-  </script>
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
 </head>
 
 <body>
   <div id="App"></div>
+  <% for (var i = 0; i < htmlWebpackPlugin.files.chunks.length; i++) { %>
+  <script type="text/javascript" src="<%=htmlWebpackPlugin.files %>"></script>
+  <% } %>
 </body>
 
 </html>

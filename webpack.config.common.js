@@ -40,14 +40,9 @@ let plugins = [
   new HtmlWebpackPlugin({
     title: '',
     server,
-    env: process.env.NODE_ENV,
-    appName: process.env.npm_package_name,
-    assetsVersion: process.env.npm_package_version,
-    assetsPath:
-      ENVNODE === 'production' || !ENVNODE ? `/${routePreName}/` : '/',
     filename: 'index.html',
     template: './index.html',
-    inject: false,
+    inject: true,
     chunks: ['manifest', 'vendor', 'app']
   }),
   new MiniCssExtractPlugin({
@@ -75,7 +70,7 @@ const config = {
     app: './src/index.js'
   },
   output: {
-    filename: '[name].bundle.js?_v=[hash]',
+    filename: '[name].bundle.js',
     path:
       ENVNODE === 'production' || !ENVNODE
         ? path.resolve(__dirname, routePreName)
