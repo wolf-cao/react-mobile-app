@@ -1,8 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const autoprefixer = require('autoprefixer')
@@ -52,7 +50,6 @@ let plugins = [
 ]
 
 if (ENVNODE === 'mockserver' || ENVNODE === 'development') {
-  plugins.push(new BundleAnalyzerPlugin())
   plugins.push(
     new vConsolePlugin({
       enable: true
@@ -62,7 +59,15 @@ if (ENVNODE === 'mockserver' || ENVNODE === 'development') {
 }
 
 if (ENVNODE === 'production' || !ENVNODE) {
-  plugins.push(new UglifyJSPlugin())
+  plugins.push(
+    new UglifyJSPlugin({
+      uglifyOptions: {
+        output: {
+          comments: false
+        }
+      }
+    })
+  )
 }
 
 const config = {
@@ -118,7 +123,8 @@ const config = {
       },
       {
         test: /\.js$/,
-        use: ['babel-loader']
+        use: ['babel-loader'],
+        exclude: /node_modules/
       },
       {
         test: /\.(css|less)$/,
