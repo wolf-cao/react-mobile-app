@@ -156,8 +156,7 @@ const config = {
                     '>1%',
                     'Firefox ESR',
                     'not ie < 9'
-                  ],
-                  flexbox: 'no-2009'
+                  ]
                 })
               ]
             }
