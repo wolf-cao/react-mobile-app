@@ -2,6 +2,14 @@
   "parser": "babel-eslint",
   "plugins": ["react"],
   "extends": ["plugin:react/recommended"],
+  "settings": {
+    "react": {
+      "createClass": "createReactClass",
+      "pragma": "React",
+      "version": "detect",
+      "flowVersion": "0.53"
+    }
+  },
   "rules": {
     "no-console": "error",
     "no-constant-condition": "error",
